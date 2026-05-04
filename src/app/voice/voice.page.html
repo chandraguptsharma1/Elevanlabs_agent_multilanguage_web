@@ -1,0 +1,48 @@
+<ion-content class="ion-padding gradient-dark">
+  <div class="page-title">
+    <h1>Emi Collection Agent</h1>
+  </div>
+
+  <section class="hero">
+    <div class="ai-crystal" [ngClass]="{ listening: micOn, speaking: speaking }">
+      <div class="ring"></div>
+      <div class="blob"></div>
+    </div>
+    <p class="ai-label">Sureco AI Assistant</p>
+  </section>
+
+  <section class="panel">
+    <div class="controls center">
+      <!-- START button with inline spinner -->
+      <ion-button fill="solid" color="light" [disabled]="connected || loading" (click)="connect()" class="btn-wide">
+        <ng-container *ngIf="!loading; else connectingTpl">
+          START
+        </ng-container>
+        <ng-template #connectingTpl>
+          <ion-spinner name="circular" class="btn-spinner"></ion-spinner>
+          <span class="btn-label">CONNECTING…</span>
+        </ng-template>
+      </ion-button>
+
+      <ion-button fill="solid" color="danger" [disabled]="!connected" (click)="disconnect()" class="btn-wide">
+        END
+      </ion-button>
+    </div>
+
+    <!-- Message section: only visible when uiMsg has text -->
+    <div *ngIf="uiMsg" class="ui-msg" [class.error]="uiMsgType==='error'" [class.success]="uiMsgType==='success'">
+      <ion-icon class="msg-icon" [name]="uiMsgIcon()"></ion-icon>
+      <div class="msg-text">{{ uiMsg }}</div>
+      <ion-button fill="clear" size="small" class="msg-close" (click)="clearUiMsg()">
+        Dismiss
+      </ion-button>
+    </div>
+
+    <!-- (Optional) old status row
+    <div class="status-row center">
+      <ion-icon name="radio-outline" class="dot" [class.on]="connected"></ion-icon>
+      <span class="status">{{ statusText() }}</span>
+      <span class="agent" *ngIf="connected">• Agent: {{ agentReady ? 'Ready' : 'Waiting…' }}</span>
+    </div> -->
+  </section>
+</ion-content>
