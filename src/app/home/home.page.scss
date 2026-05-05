@@ -1,134 +1,126 @@
-/* ===== base theme ===== */
 ion-content.gradient-dark {
-  --background: linear-gradient(135deg, #0f0c29, #302b63, #24243e) !important;
+  --background: #0e1720;
   --padding-top: max(10px, env(safe-area-inset-top));
   --padding-bottom: max(10px, env(safe-area-inset-bottom));
-  --padding-start: clamp(12px, 3vw, 20px);
-  --padding-end: clamp(12px, 3vw, 20px);
-  color: #fff !important;
+  --padding-start: clamp(10px, 1.4vw, 18px);
+  --padding-end: clamp(10px, 1.4vw, 18px);
+  color: #f7fafc;
 }
 
 ion-content.gradient-dark::part(scroll) {
-  min-height: 100%;
+  height: 100vh;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+.console-shell {
+  width: min(100%, 1180px);
+  height: calc(100vh - 20px);
+  min-height: 0;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(320px, 440px) minmax(0, 1fr);
+  gap: clamp(10px, 1.4vw, 18px);
+  align-items: stretch;
+}
+
+.call-panel,
+.conversation-panel {
+  min-width: 0;
+  min-height: 0;
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  background: rgba(15, 23, 32, 0.88);
+}
+
+.call-panel {
+  border-radius: 10px;
+  padding: clamp(12px, 1.7vw, 18px);
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
-/* ===== title bar (replaces toolbar) ===== */
-.page-title {
-  position: sticky;
-  top: 0;
-  z-index: 50;
+.conversation-panel {
+  border-radius: 10px;
   display: grid;
-  place-items: center;
-  padding: clamp(10px, 2.8vw, 16px);
-  margin: -12px -16px 6px;
-  /* make it edge-to-edge over ion-padding */
-
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-
+  grid-template-rows: auto minmax(0, 1fr);
+  overflow: hidden;
 }
 
-.page-title h1 {
-  margin: 0;
-  text-align: center;
+.brand-row,
+.conversation-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.brand-row h1,
+.conversation-header h2 {
+  margin: 4px 0 0;
+  color: #ffffff;
   font-weight: 800;
-  font-size: clamp(18px, 2.2vw, 28px);
-  letter-spacing: .4px;
-  color: #fff;
+  letter-spacing: 0;
 }
 
-.page-title::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -1px;
-  height: 10px;
-  background: radial-gradient(50% 8px at 50% 0%, rgba(168, 85, 247, .35), transparent);
-  pointer-events: none;
+.brand-row h1 {
+  font-size: clamp(22px, 3vw, 30px);
 }
 
-/* ===== layout ===== */
+.conversation-header {
+  padding: clamp(12px, 1.7vw, 18px);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+  background: rgba(17, 29, 41, 0.92);
+}
+
+.conversation-header h2 {
+  font-size: clamp(19px, 2vw, 24px);
+}
+
+.eyebrow {
+  margin: 0;
+  color: #67e8f9;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.live-pill,
+.message-count {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.12);
+  color: #cbd5e1;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.live-pill span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #94a3b8;
+}
+
+.live-pill.on span {
+  background: #22c55e;
+  box-shadow: 0 0 0 5px rgba(34, 197, 94, 0.16);
+}
+
 .hero {
   display: grid;
   place-items: center;
-  flex: 0 0 auto;
-  padding: clamp(8px, 2.6vh, 22px) 0 clamp(2px, 1vh, 6px);
+  padding: clamp(10px, 2.2vh, 22px) 0 clamp(8px, 1.8vh, 16px);
 }
 
-.panel {
-  width: 100%;
-  max-width: 680px;
-  margin: clamp(6px, 1.6vh, 12px) auto;
-  border-radius: 16px;
-  // background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.03));
-  // border: 1px solid rgba(255, 255, 255, 0.12);
-  //box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
-
-/* buttons */
-.controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  padding: clamp(6px, 1.6vh, 12px) 0 clamp(2px, 1vh, 8px);
-  justify-content: center;
-  /* center align */
-}
-
-ion-button {
-  --border-radius: 12px;
-  --padding-start: 18px;
-  --padding-end: 18px;
-  --box-shadow: 0 6px 16px rgba(0, 0, 0, .25);
-}
-
-/* mobile: stack buttons full width */
-@media (max-width: 520px) {
-  .controls ion-button {
-    width: 100%;
-  }
-}
-
-/* status row */
-.status-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 12px;
-  padding: 6px 16px 16px;
-  color: #d8d9ff;
-  font-size: 14px;
-}
-
-.status-row .dot {
-  font-size: 18px;
-  color: #e11d48;
-}
-
-.status-row .dot.on {
-  color: #22c55e;
-}
-
-.status-row .agent {
-  opacity: .9;
-}
-
-.status-row .status {
-  aria-live: polite;
-}
-
-/* a11y hint */
-
-/* ===== crystal (polished) ===== */
 .ai-crystal {
-  --size: clamp(112px, 20vmin, 190px);
+  --size: clamp(96px, 16vmin, 138px);
   position: relative;
   width: var(--size);
   height: var(--size);
@@ -136,19 +128,18 @@ ion-button {
   display: grid;
   place-items: center;
   isolation: isolate;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 .ai-crystal::after {
   content: "";
   position: absolute;
-  inset: clamp(-18px, -2.4vmin, -10px);
+  inset: -12px;
   border-radius: 50%;
-  background: radial-gradient(closest-side, rgba(168, 85, 247, .25), transparent 70%);
+  background: radial-gradient(closest-side, rgba(20, 184, 166, 0.28), transparent 72%);
   filter: blur(10px);
-  opacity: .7;
-  transition: opacity .25s, transform .25s;
-  transform: scale(1);
+  opacity: 0.75;
+  transition: opacity 0.25s, transform 0.25s;
   z-index: 0;
 }
 
@@ -156,11 +147,11 @@ ion-button {
   position: absolute;
   inset: -7px;
   border-radius: 50%;
-  background: conic-gradient(from 0deg, #a855f7, #7c3aed, #6366f1, #22d3ee, #a855f7);
-  filter: blur(.5px);
+  background: conic-gradient(from 0deg, #14b8a6, #67e8f9, #f59e0b, #14b8a6);
+  filter: blur(0.5px);
   animation: ring-spin 8s linear infinite;
   z-index: 1;
-  box-shadow: 0 0 18px rgba(168, 85, 247, .38), inset 0 0 12px rgba(124, 58, 237, .32);
+  box-shadow: 0 0 20px rgba(20, 184, 166, 0.32), inset 0 0 14px rgba(103, 232, 249, 0.22);
 }
 
 .ai-crystal .blob {
@@ -169,11 +160,10 @@ ion-button {
   height: calc(var(--size) - 26px);
   border-radius: 42% 58% 40% 60% / 46% 40% 60% 54%;
   background:
-    radial-gradient(120px 80px at 30% 25%, rgba(255, 255, 255, .22), transparent 60%),
-    linear-gradient(135deg, #7c3aed 0%, #6366f1 50%, #22d3ee 100%);
-  box-shadow: inset 0 0 35px rgba(255, 255, 255, .12), 0 10px 28px rgba(0, 0, 0, .35);
-  filter: saturate(1.1) brightness(1.02);
-  animation: blob-morph 6.5s ease-in-out infinite, blob-drift 14s linear infinite, hue 10s linear infinite;
+    radial-gradient(120px 80px at 30% 25%, rgba(255, 255, 255, 0.24), transparent 60%),
+    linear-gradient(135deg, #0f766e 0%, #0891b2 52%, #f59e0b 100%);
+  box-shadow: inset 0 0 35px rgba(255, 255, 255, 0.12), 0 10px 28px rgba(0, 0, 0, 0.35);
+  animation: blob-drift 14s linear infinite;
   z-index: 2;
 }
 
@@ -181,15 +171,9 @@ ion-button {
   animation-duration: 5.5s;
 }
 
-.ai-crystal.listening .blob {
-  filter: saturate(1.2) brightness(1.08);
-  animation-duration: 5.2s, 11s, 8s;
-}
-
 .ai-crystal.speaking::after {
   opacity: 1;
   transform: scale(1.08);
-  animation: speak-glow 1s ease-in-out infinite;
 }
 
 .ai-crystal.speaking .ring {
@@ -197,189 +181,262 @@ ion-button {
 }
 
 .ai-crystal.speaking .blob {
-  filter: saturate(1.35) brightness(1.2);
-  animation-duration: 4.6s, 9s, 6s;
+  filter: saturate(1.2) brightness(1.12);
+  animation-duration: 9s;
 }
 
 .ai-label {
-  text-align: center;
   margin: 8px 0 0;
-  color: #ece9ff;
-  font-weight: 700;
-  letter-spacing: .3px;
-  text-shadow: 0 1px 10px rgba(153, 102, 255, .35);
+  color: #d8f3f0;
 }
 
-/* keyframes */
+.form-grid {
+  display: grid;
+  gap: 10px;
+  margin-top: auto;
+}
+
+.form-box {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.form-box label {
+  margin-bottom: 5px;
+  color: #cbd5e1;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.form-box ion-input {
+  --color: #ffffff;
+  --placeholder-color: #94a3b8;
+  min-height: 34px;
+  font-size: 16px;
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+ion-button {
+  --border-radius: 8px;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --box-shadow: none;
+  min-height: 42px;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+ion-button ion-icon {
+  margin-right: 8px;
+}
+
+.start-btn {
+  --background: #0f766e;
+  --background-hover: #115e59;
+  --color: #ffffff;
+}
+
+.end-btn {
+  width: 104px;
+}
+
+.ui-msg {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  display: grid;
+  grid-template-columns: 22px 1fr auto;
+  gap: 10px;
+  align-items: center;
+  background: rgba(30, 41, 59, 0.96);
+  color: #ffffff;
+}
+
+.ui-msg.success {
+  background: rgba(6, 95, 70, 0.96);
+}
+
+.ui-msg.error {
+  background: rgba(127, 29, 29, 0.96);
+}
+
+.msg-icon {
+  font-size: 20px;
+}
+
+.msg-text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-weight: 600;
+}
+
+.msg-close {
+  color: #ffffff;
+}
+
+.conversation-list {
+  min-height: 0;
+  padding: clamp(12px, 1.7vw, 18px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: rgba(15, 23, 32, 0.94);
+}
+
+.bubble-row {
+  display: flex;
+}
+
+.bubble-row.user {
+  justify-content: flex-end;
+}
+
+.bubble-row.agent {
+  justify-content: flex-start;
+}
+
+.bubble {
+  width: fit-content;
+  max-width: min(78%, 620px);
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  background: rgba(30, 41, 59, 0.96);
+  color: #f8fafc;
+}
+
+.bubble-row.user .bubble {
+  background: #0f766e;
+  border-color: rgba(94, 234, 212, 0.25);
+}
+
+.bubble-row.agent .bubble {
+  background: #1f2937;
+  border-color: rgba(251, 191, 36, 0.24);
+}
+
+.bubble-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 6px;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 12px;
+}
+
+.bubble-meta strong {
+  color: #ffffff;
+}
+
+.bubble p {
+  margin: 0;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.empty-state {
+  min-height: 0;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 10px;
+  padding: 24px;
+  text-align: center;
+  color: #cbd5e1;
+  background: rgba(15, 23, 32, 0.74);
+}
+
+.empty-state ion-icon {
+  font-size: 44px;
+  color: #67e8f9;
+}
+
+.empty-state h3 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 22px;
+}
+
+.empty-state p {
+  width: min(100%, 420px);
+  margin: 0;
+  line-height: 1.5;
+}
+
 @keyframes ring-spin {
   to {
     transform: rotate(360deg);
   }
 }
 
-@keyframes blob-morph {
-  0% {
-    border-radius: 42% 58% 40% 60% / 46% 40% 60% 54%
-  }
-
-  25% {
-    border-radius: 60% 40% 58% 42% / 38% 62% 38% 62%
-  }
-
-  50% {
-    border-radius: 48% 52% 62% 38% / 58% 36% 64% 42%
-  }
-
-  75% {
-    border-radius: 62% 38% 44% 56% / 40% 60% 40% 60%
-  }
-
-  100% {
-    border-radius: 42% 58% 40% 60% / 46% 40% 60% 54%
-  }
-}
-
 @keyframes blob-drift {
   0% {
-    transform: rotate(0)
+    transform: rotate(0);
   }
 
   50% {
-    transform: rotate(180deg)
+    transform: rotate(180deg);
   }
 
   100% {
-    transform: rotate(360deg)
+    transform: rotate(360deg);
   }
 }
 
-@keyframes hue {
-  to {
-    filter: hue-rotate(360deg);
-  }
-}
-
-@keyframes speak-glow {
-
-  0%,
-  100% {
-    box-shadow: 0 0 24px rgba(168, 85, 247, .45), 0 0 60px rgba(99, 102, 241, .30)
-  }
-
-  50% {
-    box-shadow: 0 0 42px rgba(168, 85, 247, .75), 0 0 90px rgba(34, 211, 238, .45)
-  }
-}
-
-/* reduce motion */
 @media (prefers-reduced-motion: reduce) {
-
   .ai-crystal .ring,
   .ai-crystal .blob {
     animation: none !important;
   }
 }
 
-.btn-wide {
-  min-width: 160px;
-}
-
-.btn-spinner {
-  margin-right: 8px;
-  transform: translateY(2px);
-}
-
-.btn-label {
-  font-weight: 600;
-  letter-spacing: 0.4px;
-}
-
-/* Message area styles */
-.ui-msg {
-  width: min(100%, 560px);
-  margin: clamp(8px, 1.6vh, 14px) auto 0;
-  padding: 12px 14px;
-  border-radius: 10px;
-  display: grid;
-  grid-template-columns: 24px 1fr auto;
-  gap: 10px;
-  align-items: center;
-  max-width: 560px;
-  background: #1f2937;
-  /* default dark neutral */
-  color: #fff;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, .22);
-}
-
-.ui-msg.success {
-  background: #065f46;
-}
-
-/* emerald-800 */
-.ui-msg.error {
-  background: #7f1d1d;
-}
-
-/* red-900  */
-.msg-icon {
-  font-size: 20px;
-}
-
-.msg-text {
-  font-weight: 500;
-  min-width: 0;
-  overflow-wrap: anywhere;
-}
-
-.msg-close {
-  color: #fff;
-  text-transform: none;
-}
-
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: clamp(10px, 2vw, 16px);
-  padding: clamp(8px, 1.8vh, 14px) 0;
-  margin: 0 auto;
-  width: min(100%, 600px);
-}
-
-.form-box {
-  display: flex;
-  flex-direction: column;
-  background: rgba(255, 255, 255, 0.08);
-  padding: clamp(10px, 1.8vh, 14px) 14px;
-  border-radius: 14px;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-}
-
-.form-box label {
-  font-size: 13px;
-  color: #e5e8ff;
-  margin-bottom: 6px;
-  letter-spacing: 0.4px;
-}
-
-.form-box ion-input {
-  --color: #ffffff;
-  --placeholder-color: #aab3d6;
-  font-size: 15px;
-  min-height: 40px;
-}
-
-@media (max-width: 620px) {
+@media (max-width: 860px) {
   ion-content.gradient-dark::part(scroll) {
-    justify-content: flex-start;
+    height: auto;
+    overflow-y: auto;
   }
 
-  .form-grid {
+  .console-shell {
+    height: auto;
+    min-height: calc(100vh - 20px);
     grid-template-columns: 1fr;
   }
 
-  .btn-wide {
-    min-width: 0;
+  .conversation-panel {
+    min-height: 520px;
+  }
+}
+
+@media (max-width: 520px) {
+  .brand-row,
+  .conversation-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .controls {
+    grid-template-columns: 1fr;
+  }
+
+  .end-btn {
+    width: 100%;
+  }
+
+  .bubble {
+    max-width: 92%;
   }
 
   .ui-msg {
@@ -389,34 +446,6 @@ ion-button {
   .msg-close {
     grid-column: 2;
     justify-self: start;
-    height: 28px;
-  }
-}
-
-@media (max-height: 720px) {
-  .ai-crystal {
-    --size: clamp(96px, 18vmin, 132px);
-  }
-
-  .ai-label {
-    margin-top: 4px;
-  }
-
-  .form-box {
-    padding: 9px 12px;
-  }
-
-  .form-box ion-input {
-    min-height: 34px;
-  }
-}
-
-@media (max-height: 620px) {
-  ion-content.gradient-dark::part(scroll) {
-    justify-content: flex-start;
-  }
-
-  .hero {
-    padding-top: 4px;
+    min-height: 30px;
   }
 }

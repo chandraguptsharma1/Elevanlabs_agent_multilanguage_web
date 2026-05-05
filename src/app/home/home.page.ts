@@ -2,19 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-// Ionic standalone components
 import {
-  IonHeader,
-  IonToolbar,
-  IonTitle,
   IonContent,
   IonButton,
   IonInput,
-  IonText,
   IonIcon,
-  IonSpinner,
-  IonItem,
-  IonLabel
+  IonSpinner
 } from '@ionic/angular/standalone';
 
 @Component({
@@ -25,16 +18,10 @@ import {
   imports: [
     CommonModule,
     FormsModule,
-    IonHeader,
-    IonToolbar,
-    IonTitle,
     IonContent,
     IonButton,
-    IonItem,
-    IonLabel,
     // ✅ Add these tw
     IonInput,
-    IonText,
     IonIcon,
     IonSpinner,
   ],
@@ -59,6 +46,13 @@ export class HomePage implements OnInit {
   // ---- UI ----
   logs: string[] = [];
   textMsg = 'Hello from Ionic!';
+  conversation: Array<{
+    from: 'user' | 'agent' | 'system';
+    name: string;
+    text: string;
+    time: string;
+  }> = [];
+  private hasUserSpoken = false;
 
   // ---- Mic / WebAudio ----
   private audioCtx?: AudioContext;
@@ -90,6 +84,8 @@ export class HomePage implements OnInit {
   customerName: string = "Ram";
   dueAmount: number = 15000;
   dueDate: string = "20 तारीख";
+  userLanguageCode = 'hi-IN';
+  agentLanguageCode = 'mr-IN';
 
 
   // ---- Config ----
@@ -99,10 +95,12 @@ export class HomePage implements OnInit {
     const customer = encodeURIComponent(this.customerName);
     const amount = encodeURIComponent(this.dueAmount);
     const date = encodeURIComponent(this.dueDate);
+    const userLang = encodeURIComponent(this.userLanguageCode);
+    const agentLang = encodeURIComponent(this.agentLanguageCode);
     // NOTE: HTTPS पर deploy करने पर WSS उपयोग करें
     // return 'wss://elevanagents.onrender.com/ws/app?id=webtest1';
-    // return `ws://localhost:8091/ws/app?agent_name=${agent}&customer_name=${customer}&amount=${amount}&due_date=${date}&sid=${sid}`;
-    return `wss://sureco-agent-multilanguage-backend.onrender.com/ws/app?agent_name=${agent}&customer_name=${customer}&amount=${amount}&due_date=${date}&sid=${sid}`;
+    // return `ws://localhost:8091/ws/app?agent_name=${agent}&customer_name=${customer}&amount=${amount}&due_date=${date}&input_lang=${userLang}&user_lang=${userLang}&stt_lang=${userLang}&agent_lang=${agentLang}&response_lang=${agentLang}&sid=${sid}`;
+    return `wss://sureco-agent-multilanguage-backend.onrender.com/ws/app?agent_name=${agent}&customer_name=${customer}&amount=${amount}&due_date=${date}&input_lang=${userLang}&user_lang=${userLang}&stt_lang=${userLang}&agent_lang=${agentLang}&response_lang=${agentLang}&sid=${sid}`;
   }
 
   setUiMsg(msg: string, type: 'success' | 'error' | 'info' = 'info') {
@@ -218,6 +216,8 @@ export class HomePage implements OnInit {
     this.loading = true;
     this.callEnded = false;
     this.manualClose = false;
+    this.conversation = [];
+    this.hasUserSpoken = false;
 
 
     const url = this.wsUrl();
@@ -254,6 +254,14 @@ export class HomePage implements OnInit {
         this.setUiMsg('Connected ✓ You can speak now.', 'success');
 
         this.startKA();
+        this.sendJson({
+          type: 'client_config',
+          input_lang: this.userLanguageCode,
+          user_lang: this.userLanguageCode,
+          stt_lang: this.userLanguageCode,
+          agent_lang: this.agentLanguageCode,
+          response_lang: this.agentLanguageCode,
+        });
 
         // ✅ auto start mic
         if (this.micPermGranted && !this.micOn) this.startMic();
@@ -409,21 +417,20 @@ export class HomePage implements OnInit {
       }
 
       if (j.type === 'agent_response') {
-        this.append(`🤖 ${j?.agent_response_event?.agent_response}`);
+        const agentText = j?.agent_response_event?.agent_response;
+        this.append(`Agent: ${agentText}`);
+        if (this.hasUserSpoken) {
+          this.addConversation('agent', this.agentName || 'Agent', agentText);
+        }
         return;
       }
 
       if (j.type === 'user_transcript') {
-        this.append(`👤 ${j?.user_transcription_event?.user_transcript}`);
         const st = j?.user_transcription_event?.user_transcript;
-
-        // UI logs
-        this.append(`👤 User: ${st}`);
-
-        // Console log
-        console.log("USER SAID:", st);
-
-        // अगर UI पर दिखाना है
+        if (!String(st || '').trim()) return;
+        this.hasUserSpoken = true;
+        this.append(`User: ${st}`);
+        this.addConversation('user', this.customerName || 'Customer', st);
         this.uiMsg = "You said: " + st;
         return;
       }
@@ -650,6 +657,22 @@ export class HomePage implements OnInit {
   private append(line: string) {
     const ts = new Date().toISOString().split('T')[1]!.split('.')[0];
     this.logs.unshift(`[${ts}] ${line}`);
+  }
+
+  private addConversation(from: 'user' | 'agent' | 'system', name: string, text?: string) {
+    const cleanText = String(text || '').trim();
+    if (!cleanText) return;
+
+    this.conversation.push({
+      from,
+      name,
+      text: cleanText,
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    });
+  }
+
+  trackConversation(index: number, item: { from: string; time: string }) {
+    return `${item.from}-${item.time}-${index}`;
   }
 
   // ---- cleanup ----

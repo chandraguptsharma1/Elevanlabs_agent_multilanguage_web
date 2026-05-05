@@ -1,76 +1,102 @@
 <ion-content class="ion-padding gradient-dark">
-
-
-  <section class="hero">
-    <div class="ai-crystal" [ngClass]="{ listening: micOn, speaking: speaking }">
-      <div class="ring"></div>
-      <div class="blob"></div>
-    </div>
-    <p class="ai-label">Sureco AI Assistant</p>
-  </section>
-
-  <section class="panel">
-
-    <div class="form-grid">
-
-      <div class="form-box">
-        <label>Agent Name</label>
-        <ion-input [(ngModel)]="agentName" placeholder="Enter agent name"></ion-input>
+  <main class="console-shell">
+    <section class="call-panel">
+      <div class="brand-row">
+        <div>
+          <p class="eyebrow">Sureco AI Voice Agent</p>
+          <h1>EMI Collection Call</h1>
+        </div>
+        <div class="live-pill" [class.on]="connected">
+          <span></span>
+          {{ connected ? 'Live' : 'Ready' }}
+        </div>
       </div>
 
-      <div class="form-box">
-        <label>Customer Name</label>
-        <ion-input [(ngModel)]="customerName" placeholder="Enter customer name"></ion-input>
+      <section class="hero">
+        <div class="ai-crystal" [ngClass]="{ listening: micOn, speaking: speaking }">
+          <div class="ring"></div>
+          <div class="blob"></div>
+        </div>
+        <p class="ai-label">{{ speaking ? 'Agent speaking' : micOn ? 'Listening' : 'Assistant ready' }}</p>
+      </section>
+
+      <div class="form-grid">
+        <div class="form-box">
+          <label>Agent Name</label>
+          <ion-input [(ngModel)]="agentName" placeholder="Enter agent name"></ion-input>
+        </div>
+
+        <div class="form-box">
+          <label>Customer Name</label>
+          <ion-input [(ngModel)]="customerName" placeholder="Enter customer name"></ion-input>
+        </div>
+
+        <div class="form-box">
+          <label>Due Amount</label>
+          <ion-input type="number" [(ngModel)]="dueAmount" placeholder="15000"></ion-input>
+        </div>
       </div>
 
-      <div class="form-box">
-        <label>Due Amount</label>
-        <ion-input type="number" [(ngModel)]="dueAmount" placeholder="15000"></ion-input>
+      <div class="controls">
+        <ion-button fill="solid" [disabled]="connected || loading" (click)="connect()" class="btn-wide start-btn">
+          <ng-container *ngIf="!loading; else connectingTpl">
+            <ion-icon name="call-outline"></ion-icon>
+            Start Call
+          </ng-container>
+          <ng-template #connectingTpl>
+            <ion-spinner name="circular" class="btn-spinner"></ion-spinner>
+            <span class="btn-label">Connecting...</span>
+          </ng-template>
+        </ion-button>
+
+        <ion-button fill="solid" color="danger" [disabled]="!connected" (click)="disconnect()" class="btn-wide end-btn">
+          <ion-icon name="call-outline"></ion-icon>
+          End
+        </ion-button>
       </div>
 
-      <!-- <div class="form-box">
-        <label>Due Date</label>
-        <ion-input [(ngModel)]="dueDate" placeholder="20 तारीख"></ion-input>
-      </div> -->
+      <div *ngIf="uiMsg" class="ui-msg" [class.error]="uiMsgType==='error'" [class.success]="uiMsgType==='success'">
+        <ion-icon class="msg-icon" [name]="uiMsgIcon()"></ion-icon>
+        <div class="msg-text">{{ uiMsg }}</div>
+        <ion-button fill="clear" size="small" class="msg-close" (click)="clearUiMsg()">
+          Dismiss
+        </ion-button>
+      </div>
+    </section>
 
-    </div>
+    <section class="conversation-panel">
+      <div class="conversation-header">
+        <div>
+          <p class="eyebrow">Live Conversation</p>
+          <h2>User and Agent</h2>
+        </div>
+        <span class="message-count">{{ conversation.length }} messages</span>
+      </div>
 
-  </section>
+      <div class="conversation-list" *ngIf="conversation.length; else emptyConversation">
+        <article
+          *ngFor="let item of conversation; trackBy: trackConversation"
+          class="bubble-row"
+          [class.user]="item.from === 'user'"
+          [class.agent]="item.from === 'agent'"
+        >
+          <div class="bubble">
+            <div class="bubble-meta">
+              <strong>{{ item.name }}</strong>
+              <span>{{ item.time }}</span>
+            </div>
+            <p>{{ item.text }}</p>
+          </div>
+        </article>
+      </div>
 
-
-
-  <section class="panel">
-    <div class="controls center">
-      <!-- START button with inline spinner -->
-      <ion-button fill="solid" color="light" [disabled]="connected || loading" (click)="connect()" class="btn-wide">
-        <ng-container *ngIf="!loading; else connectingTpl">
-          START
-        </ng-container>
-        <ng-template #connectingTpl>
-          <ion-spinner name="circular" class="btn-spinner"></ion-spinner>
-          <span class="btn-label">CONNECTING…</span>
-        </ng-template>
-      </ion-button>
-
-      <ion-button fill="solid" color="danger" [disabled]="!connected" (click)="disconnect()" class="btn-wide">
-        END
-      </ion-button>
-    </div>
-
-    <!-- Message section: only visible when uiMsg has text -->
-    <div *ngIf="uiMsg" class="ui-msg" [class.error]="uiMsgType==='error'" [class.success]="uiMsgType==='success'">
-      <ion-icon class="msg-icon" [name]="uiMsgIcon()"></ion-icon>
-      <div class="msg-text">{{ uiMsg }}</div>
-      <ion-button fill="clear" size="small" class="msg-close" (click)="clearUiMsg()">
-        Dismiss
-      </ion-button>
-    </div>
-
-    <!-- (Optional) old status row
-    <div class="status-row center">
-      <ion-icon name="radio-outline" class="dot" [class.on]="connected"></ion-icon>
-      <span class="status">{{ statusText() }}</span>
-      <span class="agent" *ngIf="connected">• Agent: {{ agentReady ? 'Ready' : 'Waiting…' }}</span>
-    </div> -->
-  </section>
+      <ng-template #emptyConversation>
+        <div class="empty-state">
+          <ion-icon name="chatbubbles-outline"></ion-icon>
+          <h3>Conversation yaha dikhegi</h3>
+          <p>Call start karne ke baad customer transcript aur agent reply live bubbles me show honge.</p>
+        </div>
+      </ng-template>
+    </section>
+  </main>
 </ion-content>

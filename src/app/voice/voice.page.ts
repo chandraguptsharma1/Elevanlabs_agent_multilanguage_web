@@ -2,8 +2,8 @@ import { Component, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
-  IonHeader, IonToolbar, IonTitle, IonContent,
-  IonButton, IonSpinner, IonIcon, IonText
+  IonContent,
+  IonButton, IonSpinner, IonIcon
 } from '@ionic/angular/standalone';
 
 @Component({
@@ -13,8 +13,8 @@ import {
   standalone: true,
   imports: [
     CommonModule, FormsModule,
-    IonHeader, IonToolbar, IonTitle, IonContent,
-    IonButton, IonSpinner, IonIcon, IonText
+    IonContent,
+    IonButton, IonSpinner, IonIcon
   ],
 })
 export class VoicePage implements OnDestroy {
