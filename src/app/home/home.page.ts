@@ -101,7 +101,8 @@ export class HomePage implements OnInit {
     const date = encodeURIComponent(this.dueDate);
     // NOTE: HTTPS पर deploy करने पर WSS उपयोग करें
     // return 'wss://elevanagents.onrender.com/ws/app?id=webtest1';
-    return `ws://localhost:8091/ws/app?agent_name=${agent}&customer_name=${customer}&amount=${amount}&due_date=${date}&sid=${sid}`;
+    // return `ws://localhost:8091/ws/app?agent_name=${agent}&customer_name=${customer}&amount=${amount}&due_date=${date}&sid=${sid}`;
+    return `wss://sureco-agent-multilanguage-backend.onrender.com/ws/app?agent_name=${agent}&customer_name=${customer}&amount=${amount}&due_date=${date}&sid=${sid}`;
   }
 
   setUiMsg(msg: string, type: 'success' | 'error' | 'info' = 'info') {
